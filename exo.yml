@@ -109,9 +109,9 @@ components:
     Characteristic:
       type: object
       properties:
-        ram_memory:
+        max_speed:
           type: number
-        rom_memory:
+        max_fuel_capacity:
           type: number
       required:
         -max_speed
