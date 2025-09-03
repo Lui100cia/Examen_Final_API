@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: STD24181
+  description: This is a specification of STD24181
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /ping:
+    get:
+      responses:
+        '200':
+          description: pong
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+
+  /Cars:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Car'
+      responses:
+        '201':
+          description: Cars
+
+    /Cars:
+    get:
+      responses:
+        '200':
+          description: List of cars
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+
+  /cars/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Car
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Le voiture avec l' id n'est pas trouvé.
+
+  /cars/{id}/characteristics:
+    put:
+      summary: Update car
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Characteristic'
+      responses:
+        '200':
+          description: Updated car
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        '404':
+          description: Car not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: La voiture n'est pas trouvé.
+
+components:
+  schemas:
+    Characteristic:
+      type: object
+      properties:
+        ram_memory:
+          type: number
+        rom_memory:
+          type: number
+      required:
+        -max_speed
+        -max_fuel_capacity
+
+    Car:
+      type: object
+      properties:
+        identifier:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        characteristics:
+          $ref: '#/components/schemas/Characteristic'
+      required:
+        - identifier
+        - brand
+        - model
+        - characteristics
